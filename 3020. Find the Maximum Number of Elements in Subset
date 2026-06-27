@@ -27,3 +27,35 @@ Constraints:
 1 <= nums[i] <= 109
 
 Solution
+
+from typing import List
+from collections import Counter
+class Solution:
+    def maximumLength(self, nums: List[int]) -> int:
+        freq = Counter(nums)
+        ans = 1  
+        for x, cnt in freq.items():
+            if x == 1:
+                max_odd = cnt if cnt % 2 == 1 else cnt - 1
+                if max_odd > ans:
+                    ans = max_odd
+                continue
+            powers = []
+            cur = x
+            while cur <= 10**9:
+                powers.append(cur)
+                cur = cur * cur
+            for t in range(len(powers)):
+                ok = True
+                for i in range(t):
+                    if freq.get(powers[i], 0) < 2:
+                        ok = False
+                        break
+                if not ok:
+                    break
+                if freq.get(powers[t], 0) < 1:
+                    break
+                length = 2 * t + 1
+                if length > ans:
+                    ans = length
+        return ans
