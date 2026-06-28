@@ -53,3 +53,6 @@ class Solution:
         for x in arr:
             cur = min(x, cur + 1)
         return cur
+
+
+Testcases
