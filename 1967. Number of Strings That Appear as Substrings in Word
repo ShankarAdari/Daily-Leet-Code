@@ -50,3 +50,5 @@ class Solution:
             if p in word:
                 count += 1
         return count
+
+Testcases
