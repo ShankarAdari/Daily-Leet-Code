@@ -50,3 +50,8 @@ class Solution:
         return max(-2**31, min(res, 2**31 - 1))
 
 Testcase
+
+10
+3
+7
+-3
