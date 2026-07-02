@@ -45,6 +45,6 @@ Explanation:
 
 The final cell can be reached safely by walking along the gray cells below.
 
-
+Constraints:
 
 Any path that does not go through the cell (1, 1) is unsafe since your health will drop to 0 when reaching the final cell.
