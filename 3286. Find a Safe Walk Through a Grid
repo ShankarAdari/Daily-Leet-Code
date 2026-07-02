@@ -48,3 +48,10 @@ The final cell can be reached safely by walking along the gray cells below.
 Constraints:
 
 Any path that does not go through the cell (1, 1) is unsafe since your health will drop to 0 when reaching the final cell.
+
+m == grid.length
+n == grid[i].length
+1 <= m, n <= 50
+2 <= m * n
+1 <= health <= m + n
+grid[i][j] is either 0 or 1.
