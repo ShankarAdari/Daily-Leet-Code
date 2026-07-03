@@ -85,3 +85,49 @@ online[i] is either true or false, and both online[0] and online[n − 1] are tr
 The given graph is a directed acyclic graph.
 
 Solution
+
+from typing import List
+from collections import deque
+class Solution:
+    def findMaxPathScore(self, edges: List[List[int]], online: List[bool], k: int) -> int:
+        n = len(online)
+        adj = [[] for _ in range(n)]
+        indeg = [0] * n
+        for u, v, cost in edges:
+            adj[u].append((v, cost))
+            indeg[v] += 1
+        q = deque([i for i in range(n) if indeg[i] == 0])
+        topo = []
+        while q:
+            u = q.popleft()
+            topo.append(u)
+            for v, _ in adj[u]:
+                indeg[v] -= 1
+                if indeg[v] == 0:
+                    q.append(v)
+        costs = sorted(set(c for _, _, c in edges))
+        if not costs:
+            return -1
+        INF = 10**18
+        def feasible(X: int) -> bool:
+            dist = [INF] * n
+            dist[0] = 0
+            for u in topo:
+                if not online[u] or dist[u] == INF:
+                    continue
+                for v, c in adj[u]:
+                    if c >= X and online[v]:
+                        nd = dist[u] + c
+                        if nd < dist[v]:
+                            dist[v] = nd
+            return dist[n-1] <= k
+        lo, hi = 0, len(costs) - 1
+        ans = -1
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            if feasible(costs[mid]):
+                ans = costs[mid]
+                lo = mid + 1
+            else:
+                hi = mid - 1
+        return ans
