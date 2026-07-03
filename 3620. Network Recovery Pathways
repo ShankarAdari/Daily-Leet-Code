@@ -72,3 +72,14 @@ The minimum edge‐cost along this path is min(6, 6) = 6.
 Among the two valid paths, their scores are 5 and 6. Therefore, the answer is 6.
 
 Constraints:
+
+n == online.length
+2 <= n <= 5 * 104
+0 <= m == edges.length <= min(105, n * (n - 1) / 2)
+edges[i] = [ui, vi, costi]
+0 <= ui, vi < n
+ui != vi
+0 <= costi <= 109
+0 <= k <= 5 * 1013
+online[i] is either true or false, and both online[0] and online[n − 1] are true.
+The given graph is a directed acyclic graph.
