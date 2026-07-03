@@ -70,3 +70,5 @@ Total cost = 6 + 6 = 12 <= k, so this path is valid.
 The minimum edge‐cost along this path is min(6, 6) = 6.
 
 Among the two valid paths, their scores are 5 and 6. Therefore, the answer is 6.
+
+Constraints:
