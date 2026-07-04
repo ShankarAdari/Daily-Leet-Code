@@ -52,7 +52,6 @@ class Solution:
         min_score = float('inf')
         visited = {1}
         queue = deque([1])
-        
         while queue:
             curr = queue.popleft()
             for neighbor, dist in adj[curr]:
