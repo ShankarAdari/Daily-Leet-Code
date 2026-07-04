@@ -29,3 +29,12 @@ Output: 2
 Explanation: The path from city 1 to 4 with the minimum score is: 1 -> 2 -> 1 -> 3 -> 4. The score of this path is min(2,2,4,7) = 2.
 
 Constraints:
+
+2 <= n <= 105
+1 <= roads.length <= 105
+roads[i].length == 3
+1 <= ai, bi <= n
+ai != bi
+1 <= distancei <= 104
+There are no repeated edges.
+There is at least one path between 1 and n.
