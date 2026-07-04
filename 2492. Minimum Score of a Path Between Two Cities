@@ -42,7 +42,6 @@ There is at least one path between 1 and n.
 Solution
 
 from collections import deque, defaultdict
-
 class Solution:
     def minScore(self, n: int, roads: list[list[int]]) -> int:
         adj = defaultdict(list)
