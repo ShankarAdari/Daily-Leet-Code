@@ -30,3 +30,38 @@ Constraints:
 2 <= board.length == board[i].length <= 100
 
 Solution :
+
+from typing import List
+class Solution:
+    def pathsWithMaxScore(self, board: List[str]) -> List[int]:
+        MOD = 10**9 + 7
+        n = len(board)
+        dp = [[(-1, 0) for _ in range(n)] for _ in range(n)]
+        if board[n-1][n-1] == 'S':
+            dp[n-1][n-1] = (0, 1)
+        for i in range(n-1, -1, -1):
+            for j in range(n-1, -1, -1):
+                if board[i][j] == 'X':
+                    continue
+                if i == n-1 and j == n-1:
+                    continue
+                best_sum = -1
+                best_count = 0
+                for di, dj in ((1,0), (0,1), (1,1)):
+                    ni, nj = i + di, j + dj
+                    if ni < n and nj < n and board[ni][nj] != 'X':
+                        s, c = dp[ni][nj]
+                        if s == -1:
+                            continue
+                        add = int(board[i][j]) if board[i][j].isdigit() else 0
+                        cand = s + add
+                        if cand > best_sum:
+                            best_sum = cand
+                            best_count = c
+                        elif cand == best_sum:
+                            best_count = (best_count + c) % MOD
+                if best_sum != -1:
+                    dp[i][j] = (best_sum, best_count)
+        if dp[0][0][0] == -1:
+            return [0, 0]
+        return [dp[0][0][0], dp[0][0][1] % MOD]
