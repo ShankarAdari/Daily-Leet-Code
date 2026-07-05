@@ -10,7 +10,6 @@ Return a list of two integers: the first integer is the maximum sum of numeric c
 
 In case there is no path, return [0, 0].
 
- 
 
 Example 1:
 
