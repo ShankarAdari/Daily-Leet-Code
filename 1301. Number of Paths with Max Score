@@ -24,3 +24,5 @@ Example 3:
 
 Input: board = ["E11","XXX","11S"]
 Output: [0,0]
+
+Constraints:
