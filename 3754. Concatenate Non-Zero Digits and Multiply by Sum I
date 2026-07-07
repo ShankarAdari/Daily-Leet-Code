@@ -49,3 +49,7 @@ class Solution:
         x = int(''.join(digits))
         total = sum(int(d) for d in digits)
         return x * total
+
+
+Testcase:
+
