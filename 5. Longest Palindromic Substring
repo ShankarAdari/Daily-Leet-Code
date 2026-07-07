@@ -46,3 +46,9 @@ class Solution:
                 max_len = cur_len
                 start = i - (cur_len - 1) // 2
         return s[start:start + max_len]
+
+
+Testcase:
+
+"babad"
+"cbbd"
