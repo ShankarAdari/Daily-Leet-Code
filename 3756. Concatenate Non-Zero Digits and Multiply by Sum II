@@ -72,3 +72,41 @@ queries[i] = [li, ri]
 
 
 Solution:
+
+from typing import List
+class Solution:
+    def sumAndMultiply(self, s: str, queries: List[List[int]]) -> List[int]:
+        MOD = 10**9 + 7
+        m = len(s)
+        digits = [] 
+        pref_cnt = [0] * (m + 1) 
+        for i, ch in enumerate(s):
+            pref_cnt[i + 1] = pref_cnt[i] + (1 if ch != '0' else 0)
+            if ch != '0':
+                digits.append(int(ch))
+        n = len(digits)
+        if n == 0:
+            return [0] * len(queries)
+        pref_sum = [0] * (n + 1)
+        for i, d in enumerate(digits):
+            pref_sum[i + 1] = (pref_sum[i] + d) % MOD
+        pref_val = [0] * (n + 1)
+        for i, d in enumerate(digits):
+            pref_val[i + 1] = (pref_val[i] * 10 + d) % MOD
+        pow10 = [1] * (n + 1)
+        for i in range(1, n + 1):
+            pow10[i] = pow10[i - 1] * 10 % MOD
+        ans = []
+        for l, r in queries:
+            left_cnt = pref_cnt[l]          
+            right_cnt = pref_cnt[r + 1]    
+            count = right_cnt - left_cnt
+            if count == 0:
+                ans.append(0)
+                continue
+            L = left_cnt
+            R = right_cnt - 1
+            sum_d = (pref_sum[R + 1] - pref_sum[L]) % MOD
+            val = (pref_val[R + 1] - pref_val[L] * pow10[count]) % MOD
+            ans.append(val * sum_d % MOD)
+        return ans
