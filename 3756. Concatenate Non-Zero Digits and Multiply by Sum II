@@ -110,3 +110,6 @@ class Solution:
             val = (pref_val[R + 1] - pref_val[L] * pow10[count]) % MOD
             ans.append(val * sum_d % MOD)
         return ans
+
+
+Testcase:
