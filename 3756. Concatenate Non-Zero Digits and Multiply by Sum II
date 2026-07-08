@@ -63,3 +63,9 @@ We return 44444444445 modulo (109 + 7) = 444444137.
 
 
 Constraints:
+
+1 <= m == s.length <= 105
+s consists of digits only.
+1 <= queries.length <= 105
+queries[i] = [li, ri]
+0 <= li <= ri < m
