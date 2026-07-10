@@ -72,3 +72,6 @@ Constraints:
 1 <= queries.length <= 105
 queries[i] == [ui, vi]
 0 <= ui, vi < n
+
+
+Solution:
