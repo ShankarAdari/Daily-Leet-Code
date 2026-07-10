@@ -89,3 +89,5 @@ class Solution:
         for u, v in queries:
             ans.append(comp[u] == comp[v])
         return ans
+
+Testcase:
