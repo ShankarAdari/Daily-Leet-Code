@@ -32,3 +32,12 @@ Query	Shortest Path	Minimum Distance
 Thus, the output is [1, 1].
 
 Example 2:
+
+Input: n = 5, nums = [5,3,1,9,10], maxDiff = 2, queries = [[0,1],[0,2],[2,3],[4,3]]
+
+Output: [1,2,-1,1]
+
+Explanation:
+
+The resulting graph is:
+
