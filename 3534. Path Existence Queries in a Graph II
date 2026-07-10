@@ -64,3 +64,11 @@ Nodes 0 and 2: |nums[0] - nums[2]| = |3 - 1| = 2 > 1
 Nodes 1 and 2: |nums[1] - nums[2]| = |6 - 1| = 5 > 1
 Thus, no node can reach any other node, and the output is [0, -1, -1].
 
+Constraints:
+
+1 <= n == nums.length <= 105
+0 <= nums[i] <= 105
+0 <= maxDiff <= 105
+1 <= queries.length <= 105
+queries[i] == [ui, vi]
+0 <= ui, vi < n
