@@ -55,7 +55,6 @@ class Solution:
                 component_nodes = []
                 queue = deque([i])
                 visited[i] = True
-                
                 edge_count = 0
                 while queue:
                     u = queue.popleft()
