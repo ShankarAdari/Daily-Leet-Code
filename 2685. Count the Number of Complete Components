@@ -39,7 +39,6 @@ There are no repeated edges.
 Solution:
 
 from collections import deque, defaultdict
-
 class Solution:
     def countCompleteComponents(self, n: int, edges: list[list[int]]) -> int:
         adj = defaultdict(list)
