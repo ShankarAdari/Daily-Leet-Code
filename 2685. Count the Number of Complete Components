@@ -46,7 +46,6 @@ class Solution:
         for u, v in edges:
             adj[u].append(v)
             adj[v].append(u)
-            
         visited = [False] * n
         complete_count = 0
         for i in range(n):
