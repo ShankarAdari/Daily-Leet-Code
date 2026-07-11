@@ -49,7 +49,6 @@ class Solution:
             
         visited = [False] * n
         complete_count = 0
-        
         for i in range(n):
             if not visited[i]:
                 component_nodes = []
