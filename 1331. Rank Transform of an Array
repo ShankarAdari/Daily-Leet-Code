@@ -48,6 +48,7 @@ class Solution:
         rank_map = {val: rank + 1 for rank, val in enumerate(sorted_unique)}
         return [rank_map[x] for x in arr]
 
+
 Testcase:
 
 [40,10,20,30]
