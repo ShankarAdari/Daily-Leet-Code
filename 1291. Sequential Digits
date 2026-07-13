@@ -33,3 +33,5 @@ class Solution:
                     res.append(num)
         res.sort()
         return res
+
+Testcase:
