@@ -35,3 +35,8 @@ class Solution:
         return res
 
 Testcase:
+
+100
+300
+1000
+13000
