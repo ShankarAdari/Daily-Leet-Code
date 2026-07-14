@@ -52,6 +52,7 @@ class Solution:
             result += min(groups[i-1], groups[i])
         return result
 
+
 Testcase:
 
 "00110011"
