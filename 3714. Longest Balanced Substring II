@@ -49,57 +49,54 @@ Solution:
 class Solution:
     def longestBalanced(self, s: str) -> int:
         n = len(s)
-        max_len = 1
-        count = 1
+        ans = 0
+        run = 1
         for i in range(1, n):
             if s[i] == s[i-1]:
-                count += 1
-            else:a
-                max_len = max(max_len, count)
-                count = 1
-        max_len = max(max_len, count)  
-        for missing in ['a', 'b', 'c']:
-            present = [c for c in ['a', 'b', 'c'] if c != missing]
-            c1, c2 = present[0], present[1]
-            first_occ = {0: -1}
-            count1 = count2 = 0
-            for i in range(n):
-                if s[i] == c1:
-                    count1 += 1
-                elif s[i] == c2:
-                    count2 += 1
+                run += 1
+            else:
+                ans = max(ans, run)
+                run = 1
+        ans = max(ans, run)
+        def two_char_case(exclude: str) -> int:
+            allowed = [c for c in 'abc' if c != exclude]
+            c1, c2 = allowed[0], allowed[1]
+            best = 0
+            diff = 0
+            first = {0: 0}
+            pref_idx = 1
+            for ch in s:
+                if ch == exclude:
+                    diff = 0
+                    first = {0: pref_idx}
                 else:
-                    count1 = count2 = 0
-                    first_occ = {0: i}
-                    continue
-                diff = count1 - count2
-                if diff in first_occ:
-                    length = i - first_occ[diff]
-                    if length >= 2 and count1 > 0 and count2 > 0:
-                        max_len = max(max_len, length)
-                if diff not in first_occ:
-                    first_occ[diff] = i
-        first_occ = {(0, 0): (-1, 0, 0, 0)}
-        count_a = count_b = count_c = 0
-        for i in range(n):
-            if s[i] == 'a':
-                count_a += 1
-            elif s[i] == 'b':
-                count_b += 1
+                    if ch == c1:
+                        diff += 1
+                    else:  
+                        diff -= 1
+                    if diff in first:
+                        best = max(best, pref_idx - first[diff])
+                    else:
+                        first[diff] = pref_idx
+                pref_idx += 1
+            return best
+        ans = max(ans, two_char_case('a'), two_char_case('b'), two_char_case('c'))
+        first = {(0, 0): 0}
+        d1 = d2 = 0
+        for i, ch in enumerate(s, 1):
+            if ch == 'a':
+                d1 += 1
+                d2 += 1
+            elif ch == 'b':
+                d1 -= 1
+            else:  # 'c'
+                d2 -= 1
+            key = (d1, d2)
+            if key in first:
+                ans = max(ans, i - first[key])
             else:
-                count_c += 1
-            diff_ab = count_a - count_b
-            diff_ac = count_a - count_c
-            key = (diff_ab, diff_ac)
-            if key in first_occ:
-                prev_idx, prev_a, prev_b, prev_c = first_occ[key]
-                if count_a > prev_a and count_b > prev_b and count_c > prev_c:
-                    length = i - prev_idx
-                    max_len = max(max_len, length)
-            else:
-                first_occ[key] = (i, count_a, count_b, count_c)
-        return max_len
-
+                first[key] = i
+        return ans
 Testcase:
 
 "abbac"
