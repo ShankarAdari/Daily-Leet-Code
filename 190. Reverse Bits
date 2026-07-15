@@ -53,6 +53,7 @@ class Solution:
             result |= (bit << (31 - i))
         return result
 
+
 Testcase:
 
 43261596
