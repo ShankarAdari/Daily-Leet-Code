@@ -29,6 +29,7 @@ Constraints:
 n consists of only digits.
 n does not contain any leading zeros and represents a positive integer.
 
+
 Solution:
 
 class Solution:
