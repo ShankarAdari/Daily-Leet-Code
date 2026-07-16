@@ -13,3 +13,6 @@ Output: 3
 Explanation: 10 + 11 + 11 = 32
 
 Example 2:
+
+Input: n = "82734"
+Output: 8
