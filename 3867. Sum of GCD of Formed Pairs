@@ -29,3 +29,7 @@ n consists of only digits.
 n does not contain any leading zeros and represents a positive integer.
 
 Solution:
+
+class Solution:
+    def minPartitions(self, n: str) -> int:
+        return max(int(c) for c in n)
