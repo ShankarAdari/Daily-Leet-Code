@@ -23,3 +23,7 @@ Input: n = "27346209830709182346"
 Output: 9
 
 Constraints:
+
+1 <= n.length <= 105
+n consists of only digits.
+n does not contain any leading zeros and represents a positive integer.
