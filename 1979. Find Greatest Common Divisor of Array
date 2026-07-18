@@ -58,6 +58,7 @@ class Solution:
         max_val = max(nums)
         return math.gcd(min_val, max_val)
 
+
 Testcase:
 
 [2,5,6,9,10]
