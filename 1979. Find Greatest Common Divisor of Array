@@ -21,6 +21,7 @@ The greatest common divisor of 2 and 10 is 2.
 Example 2:
 
 
+
 from typing import List
 import math
 class Solution:
