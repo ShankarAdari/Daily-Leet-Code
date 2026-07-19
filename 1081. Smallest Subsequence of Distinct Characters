@@ -3,7 +3,8 @@
 
 Medium
 
-
+Input: s = "bcabc"
+Output: "abc"
 
 
 Example 2:
