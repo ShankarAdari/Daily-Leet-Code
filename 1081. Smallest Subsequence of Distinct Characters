@@ -3,6 +3,7 @@
 
 Medium
 
+
 class Solution:
     def smallestSubsequence(self, s: str) -> str:
         last = {c: i for i, c in enumerate(s)}
