@@ -1,6 +1,11 @@
 1260. Shift 2D Grid
 
-
+m == grid.length
+n == grid[i].length
+1 <= m <= 50
+1 <= n <= 50
+-1000 <= grid[i][j] <= 1000
+0 <= k <= 100
 
 
 Solution:
