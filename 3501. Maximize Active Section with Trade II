@@ -57,6 +57,7 @@ Because there is no block of '1's surrounded by '0's, no valid trade is possible
 Query [2, 3] → Substring "00" → Augmented to "1001"
 Because there is no block of '1's surrounded by '0's, no valid trade is possible. The maximum number of active sections is 1.
 
+
 Example 3:
 
 Input: s = "1000100", queries = [[1,5],[0,6],[0,4]]
