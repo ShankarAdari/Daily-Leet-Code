@@ -34,6 +34,7 @@ Explanation:
 
 Because there is no block of '1's surrounded by '0's, no valid trade is possible. The maximum number of active sections is 1.
 
+
 Example 2:
 
 Input: s = "0100", queries = [[0,3],[0,2],[1,3],[2,3]]
