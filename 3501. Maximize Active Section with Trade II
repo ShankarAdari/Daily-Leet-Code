@@ -77,6 +77,7 @@ The final string without augmentation is "1111111". The maximum number of active
 Query [0, 4] → Substring "10001" → Augmented to "1100011"
 Because there is no block of '1's surrounded by '0's, no valid trade is possible. The maximum number of active sections is 2.
 
+
 Example 4:
 
 Input: s = "01010", queries = [[0,3],[1,4],[1,3]]
