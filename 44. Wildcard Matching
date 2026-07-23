@@ -1,0 +1,64 @@
+44. Wildcard Matching
+Hard
+Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*' where:
+
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+The matching should cover the entire input string (not partial).
+
+ 
+
+Example 1:
+
+Input: s = "aa", p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+Example 2:
+
+Input: s = "aa", p = "*"
+Output: true
+Explanation: '*' matches any sequence.
+Example 3:
+
+Input: s = "cb", p = "?a"
+Output: false
+Explanation: '?' matches 'c', but the second letter is 'a', which does not match 'b'.
+ 
+
+Constraints:
+
+0 <= s.length, p.length <= 2000
+s contains only lowercase English letters.
+p contains only lowercase English letters, '?' or '*'.
+
+
+Solution:
+
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        n = len(s)
+        m = len(p)
+        dp = [False] * (m + 1)
+        dp[0] = True
+        for j in range(1, m + 1):
+            if p[j - 1] == '*':
+                dp[j] = dp[j - 1]
+        for i in range(1, n + 1):
+            new_dp = [False] * (m + 1)
+            for j in range(1, m + 1):
+                if p[j - 1] == '*':
+                    new_dp[j] = new_dp[j - 1] or dp[j]
+                elif p[j - 1] == '?' or s[i - 1] == p[j - 1]:
+                    new_dp[j] = dp[j - 1]
+            dp = new_dp
+        return dp[m]
+
+
+Testcase:
+
+"aa"
+"a"
+"aa"
+"*"
+"cb"
+"?a"
