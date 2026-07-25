@@ -1,6 +1,8 @@
 3536. Maximum Product of Two Digits
 
+ 
 
+Constraints:
 
 10 <= n <= 109
 
