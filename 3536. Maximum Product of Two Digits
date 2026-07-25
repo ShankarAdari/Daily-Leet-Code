@@ -2,6 +2,7 @@
 
 
 
+
 class Solution:
     def maxProduct(self, n: int) -> int:
         digits = [int(c) for c in str(n)]
