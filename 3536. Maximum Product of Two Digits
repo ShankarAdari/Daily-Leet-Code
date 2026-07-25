@@ -1,6 +1,10 @@
 3536. Maximum Product of Two Digits
 
-
+class Solution:
+    def maxProduct(self, n: int) -> int:
+        digits = [int(c) for c in str(n)]
+        digits.sort(reverse=True)
+        return digits[0] * digits[1]
 
 
 Testcase:
