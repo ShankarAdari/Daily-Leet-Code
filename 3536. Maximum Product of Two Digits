@@ -3,6 +3,7 @@
 
 10 <= n <= 109
 
+
 Solution:
 
 class Solution:
