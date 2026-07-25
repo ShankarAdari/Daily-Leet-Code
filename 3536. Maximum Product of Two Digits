@@ -1,6 +1,14 @@
 3536. Maximum Product of Two Digits
 
+Input: n = 22
 
+Output: 4
+
+Explanation:
+
+The digits of n are [2, 2].
+The possible products of any two digits are: 2 * 2 = 4.
+The maximum product is 4.
 
 
 Example 3:
