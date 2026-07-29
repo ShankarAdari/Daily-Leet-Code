@@ -1,0 +1,117 @@
+3518. Smallest Palindromic Rearrangement II
+
+Hard
+
+
+You are given a palindromic string s and an integer k.
+
+Return the k-th lexicographically smallest palindromic permutation of s. If there are fewer than k distinct palindromic permutations, return an empty string.
+
+Note: Different rearrangements that yield the same palindromic string are considered identical and are counted once.
+ 
+
+Example 1:
+
+Input: s = "abba", k = 2
+
+Output: "baab"
+
+Explanation:
+
+The two distinct palindromic rearrangements of "abba" are "abba" and "baab".
+Lexicographically, "abba" comes before "baab". Since k = 2, the output is "baab".
+
+
+Example 2:
+
+Input: s = "aa", k = 2
+
+Output: ""
+
+Explanation:
+
+There is only one palindromic rearrangement: "aa".
+The output is an empty string since k = 2 exceeds the number of possible rearrangements.
+
+
+Example 3:
+
+Input: s = "bacab", k = 1
+
+Output: "abcba"
+
+Explanation:
+
+The two distinct palindromic rearrangements of "bacab" are "abcba" and "bacab".
+Lexicographically, "abcba" comes before "bacab". Since k = 1, the output is "abcba".
+ 
+
+Constraints:
+
+1 <= s.length <= 104
+s consists of lowercase English letters.
+s is guaranteed to be palindromic.
+1 <= k <= 106
+
+
+Solution:
+
+class Solution:
+    def smallestPalindrome(self, s: str, k: int) -> str:
+        freq = [0] * 26
+        for ch in s:
+            freq[ord(ch) - 97] += 1
+        mid = -1
+        half = [0] * 26
+        for i in range(26):
+            if freq[i] % 2 == 1:
+                mid = i
+            half[i] = freq[i] // 2
+        L = sum(half)
+        def count_capped(counts, total, cap):
+            """Return exact multiset-permutation count if <= cap,
+               otherwise cap+1 (sentinel meaning '> cap')."""
+            res = 1
+            remaining = total
+            for c in counts:
+                if c == 0:
+                    continue
+                cc = min(c, remaining - c)          
+                for i in range(1, cc + 1):
+                    res = res * (remaining - cc + i) // i
+                    if res > cap:
+                        return cap + 1
+                remaining -= c
+            return res if res <= cap else cap + 1
+        if count_capped(half, L, k - 1) < k:
+            return ""
+        counts = half[:]
+        remaining_total = L
+        result = []
+        for _ in range(L):
+            for c in range(26):
+                if counts[c] == 0:
+                    continue
+                counts[c] -= 1
+                cnt = count_capped(counts, remaining_total - 1, k - 1)
+                if cnt >= k:                
+                    result.append(chr(97 + c))
+                    remaining_total -= 1
+                    break
+                else:
+                    k -= cnt
+                    counts[c] += 1       
+        half_str = ''.join(result)
+        if mid == -1:
+            return half_str + half_str[::-1]
+        return half_str + chr(97 + mid) + half_str[::-1]
+
+
+Testcase:
+
+"abba"
+2
+"aa"
+2
+"bacab"
+1
