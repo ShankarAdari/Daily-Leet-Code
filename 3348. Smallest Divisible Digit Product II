@@ -1,0 +1,187 @@
+3348. Smallest Divisible Digit Product II
+
+
+Hard
+You are given a string num which represents a positive integer, and an integer t.
+
+A number is called zero-free if none of its digits are 0.
+
+Return a string representing the smallest zero-free number greater than or equal to num such that the product of its digits is divisible by t. If no such number exists, return "-1".
+
+ 
+
+Example 1:
+
+Input: num = "1234", t = 256
+
+Output: "1488"
+
+Explanation:
+
+The smallest zero-free number that is greater than 1234 and has the product of its digits divisible by 256 is 1488, with the product of its digits equal to 256.
+
+Example 2:
+
+Input: num = "12355", t = 50
+
+Output: "12355"
+
+Explanation:
+
+12355 is already zero-free and has the product of its digits divisible by 50, with the product of its digits equal to 150.
+
+Example 3:
+
+Input: num = "11111", t = 26
+
+Output: "-1"
+
+Explanation:
+
+No number greater than 11111 has the product of its digits divisible by 26.
+
+ 
+
+Constraints:
+
+2 <= num.length <= 2 * 105
+num consists only of digits in the range ['0', '9'].
+num does not contain leading zeros.
+1 <= t <= 1014
+
+
+
+Solution:
+
+from collections import deque
+from typing import List
+class Solution:
+    def smallestNumber(self, num: str, t: int) -> str:
+        need2 = need3 = need5 = need7 = 0
+        temp = t
+        while temp % 2 == 0:
+            need2 += 1
+            temp //= 2
+        while temp % 3 == 0:
+            need3 += 1
+            temp //= 3
+        while temp % 5 == 0:
+            need5 += 1
+            temp //= 5
+        while temp % 7 == 0:
+            need7 += 1
+            temp //= 7
+        if temp != 1:
+            return "-1"
+        exp = {
+            0: (0, 0, 0, 0),
+            1: (0, 0, 0, 0),
+            2: (1, 0, 0, 0),
+            3: (0, 1, 0, 0),
+            4: (2, 0, 0, 0),
+            5: (0, 0, 1, 0),
+            6: (1, 1, 0, 0),
+            7: (0, 0, 0, 1),
+            8: (3, 0, 0, 0),
+            9: (0, 2, 0, 0)
+        }
+        if t == 1:
+            need2 = need3 = need5 = need7 = 0
+        max2, max3, max5, max7 = need2, need3, need5, need7
+        d2 = max2 + 1
+        d3 = max3 + 1
+        d5 = max5 + 1
+        d7 = max7 + 1
+        def idx(e2, e3, e5, e7):
+            return ((e2 * d3 + e3) * d5 + e5) * d7 + e7
+        INF = 10**9
+        total_states = d2 * d3 * d5 * d7
+        dist = [INF] * total_states
+        dist[idx(0, 0, 0, 0)] = 0
+        q = deque()
+        q.append((0, 0, 0, 0))
+        digits_exp = [exp[i] for i in range(1, 10)]
+        while q:
+            e2, e3, e5, e7 = q.popleft()
+            d = dist[idx(e2, e3, e5, e7)]
+            for ae2, ae3, ae5, ae7 in digits_exp:
+                ne2 = min(max2, e2 + ae2)
+                ne3 = min(max3, e3 + ae3)
+                ne5 = min(max5, e5 + ae5)
+                ne7 = min(max7, e7 + ae7)
+                ni = idx(ne2, ne3, ne5, ne7)
+                if dist[ni] > d + 1:
+                    dist[ni] = d + 1
+                    q.append((ne2, ne3, ne5, ne7))
+        if '0' not in num:
+            p2 = p3 = p5 = p7 = 0
+            for ch in num:
+                d = int(ch)
+                a2, a3, a5, a7 = exp[d]
+                p2 += a2
+                p3 += a3
+                p5 += a5
+                p7 += a7
+            if p2 >= need2 and p3 >= need3 and p5 >= need5 and p7 >= need7:
+                return num
+        n = len(num)
+        first_zero = num.find('0')
+        if first_zero == -1:
+            first_zero = n
+        pref2 = [0] * (n + 1)
+        pref3 = [0] * (n + 1)
+        pref5 = [0] * (n + 1)
+        pref7 = [0] * (n + 1)
+        for i, ch in enumerate(num):
+            d = int(ch)
+            a2, a3, a5, a7 = exp[d]
+            pref2[i+1] = pref2[i] + a2
+            pref3[i+1] = pref3[i] + a3
+            pref5[i+1] = pref5[i] + a5
+            pref7[i+1] = pref7[i] + a7
+        def build_suffix(L, need2, need3, need5, need7):
+            res = []
+            cur2, cur3, cur5, cur7 = need2, need3, need5, need7
+            for pos in range(L):
+                for d in range(1, 10):
+                    a2, a3, a5, a7 = exp[d]
+                    n2 = max(0, cur2 - a2)
+                    n3 = max(0, cur3 - a3)
+                    n5 = max(0, cur5 - a5)
+                    n7 = max(0, cur7 - a7)
+                    if dist[idx(n2, n3, n5, n7)] <= L - pos - 1:
+                        res.append(str(d))
+                        cur2, cur3, cur5, cur7 = n2, n3, n5, n7
+                        break
+            return ''.join(res)
+        for i in range(min(n-1, first_zero), -1, -1):
+            start_digit = int(num[i]) + 1
+            if start_digit < 1:
+                start_digit = 1
+            for d in range(start_digit, 10):
+                a2, a3, a5, a7 = exp[d]
+                total2 = pref2[i] + a2
+                total3 = pref3[i] + a3
+                total5 = pref5[i] + a5
+                total7 = pref7[i] + a7
+                rem2 = max(0, need2 - total2)
+                rem3 = max(0, need3 - total3)
+                rem5 = max(0, need5 - total5)
+                rem7 = max(0, need7 - total7)
+                L = n - i - 1
+                if dist[idx(rem2, rem3, rem5, rem7)] <= L:
+                    suffix = build_suffix(L, rem2, rem3, rem5, rem7)
+                    return num[:i] + str(d) + suffix
+        min_digits = dist[idx(need2, need3, need5, need7)]
+        L = max(n + 1, min_digits)
+        return build_suffix(L, need2, need3, need5, need7)
+
+
+Testcase:
+
+"1234"
+256
+"12355"
+50
+"11111"
+26
