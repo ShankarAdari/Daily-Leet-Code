@@ -1,0 +1,199 @@
+3548. Equal Sum Grid Partition II
+
+
+Hard
+You are given an m x n matrix grid of positive integers. Your task is to determine if it is possible to make either one horizontal or one vertical cut on the grid such that:
+
+Each of the two resulting sections formed by the cut is non-empty.
+The sum of elements in both sections is equal, or can be made equal by discounting at most one single cell in total (from either section).
+If a cell is discounted, the rest of the section must remain connected.
+Return true if such a partition exists; otherwise, return false.
+
+Note: A section is connected if every cell in it can be reached from any other cell by moving up, down, left, or right through other cells in the section.
+
+ 
+
+Example 1:
+
+Input: grid = [[1,4],[2,3]]
+
+Output: true
+
+Explanation:
+
+
+
+A horizontal cut after the first row gives sums 1 + 4 = 5 and 2 + 3 = 5, which are equal. Thus, the answer is true.
+Example 2:
+
+Input: grid = [[1,2],[3,4]]
+
+Output: true
+
+Explanation:
+
+
+
+A vertical cut after the first column gives sums 1 + 3 = 4 and 2 + 4 = 6.
+By discounting 2 from the right section (6 - 2 = 4), both sections have equal sums and remain connected. Thus, the answer is true.
+Example 3:
+
+Input: grid = [[1,2,4],[2,3,5]]
+
+Output: false
+
+Explanation:
+
+
+
+A horizontal cut after the first row gives 1 + 2 + 4 = 7 and 2 + 3 + 5 = 10.
+By discounting 3 from the bottom section (10 - 3 = 7), both sections have equal sums, but they do not remain connected as it splits the bottom section into two parts ([2] and [5]). Thus, the answer is false.
+Example 4:
+
+Input: grid = [[4,1,8],[3,2,6]]
+
+Output: false
+
+Explanation:
+
+No valid cut exists, so the answer is false.
+
+ 
+
+Constraints:
+
+1 <= m == grid.length <= 105
+1 <= n == grid[i].length <= 105
+2 <= m * n <= 105
+1 <= grid[i][j] <= 105
+
+
+Solution:
+
+from typing import List
+class Solution:
+    def canPartitionGrid(self, grid: List[List[int]]) -> bool:
+        m = len(grid)
+        n = len(grid[0])
+        total = sum(sum(row) for row in grid)
+        if m == 1:                     
+            row = grid[0]
+            pref = [0] * (n + 1)
+            for c in range(n):
+                pref[c + 1] = pref[c] + row[c]
+            for j in range(1, n):
+                left = pref[j]
+                right = total - left
+                if left == right:
+                    return True
+                if left > right:
+                    diff = left - right
+                    if j >= 2:       
+                        if row[0] == diff or row[j - 1] == diff:
+                            return True
+                else:
+                    diff = right - left
+                    if n - j >= 2:
+                        if row[j] == diff or row[n - 1] == diff:
+                            return True
+            return False
+        if n == 1:                     
+            col = [grid[i][0] for i in range(m)]
+            pref = [0] * (m + 1)
+            for r in range(m):
+                pref[r + 1] = pref[r] + col[r]
+            for i in range(1, m):
+                top = pref[i]
+                bottom = total - top
+                if top == bottom:
+                    return True
+                if top > bottom:
+                    diff = top - bottom
+                    if i >= 2:      
+                        if col[0] == diff or col[i - 1] == diff:
+                            return True
+                else:
+                    diff = bottom - top
+                    if m - i >= 2:  
+                        if col[i] == diff or col[m - 1] == diff:
+                            return True
+            return False
+        row_pref = [0] * (m + 1)
+        for i in range(m):
+            row_pref[i + 1] = row_pref[i] + sum(grid[i])
+        col_pref = [0] * (n + 1)
+        for j in range(n):
+            col_sum = 0
+            for i in range(m):
+                col_sum += grid[i][j]
+            col_pref[j + 1] = col_pref[j] + col_sum
+        min_row = {}
+        max_row = {}
+        min_col = {}
+        max_col = {}
+        for i in range(m):
+            for j in range(n):
+                v = grid[i][j]
+                if v not in min_row:
+                    min_row[v] = i
+                    max_row[v] = i
+                else:
+                    min_row[v] = min(min_row[v], i)
+                    max_row[v] = max(max_row[v], i)
+                if v not in min_col:
+                    min_col[v] = j
+                    max_col[v] = j
+                else:
+                    min_col[v] = min(min_col[v], j)
+                    max_col[v] = max(max_col[v], j)
+        for i in range(1, m):
+            top = row_pref[i]
+            bottom = total - top
+            if top == bottom:
+                return True
+            if top > bottom:
+                diff = top - bottom
+                if i == 1:           
+                    if grid[0][0] == diff or grid[0][n - 1] == diff:
+                        return True
+                else:               
+                    if diff in min_row and min_row[diff] < i:
+                        return True
+            else:
+                diff = bottom - top
+                if m - i == 1:       
+                    if grid[m - 1][0] == diff or grid[m - 1][n - 1] == diff:
+                        return True
+                else:               
+                    if diff in max_row and max_row[diff] >= i:
+                        return True
+        for j in range(1, n):
+            left = col_pref[j]
+            right = total - left
+            if left == right:
+                return True
+            if left > right:
+                diff = left - right
+                if j == 1:           
+                    if grid[0][0] == diff or grid[m - 1][0] == diff:
+                        return True
+                else:                
+                    if diff in min_col and min_col[diff] < j:
+                        return True
+            else:
+                diff = right - left
+                if n - j == 1:      
+                    if grid[0][n - 1] == diff or grid[m - 1][n - 1] == diff:
+                        return True
+                else:                
+                    if diff in max_col and max_col[diff] >= j:
+                        return True
+        return False
+
+
+Testcase:
+
+[[1,4],[2,3]]
+[[1,2],[3,4]]
+[[1,2,4],[2,3,5]]
+[[4,1,8],[3,2,6]]
