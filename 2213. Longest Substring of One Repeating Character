@@ -1,0 +1,130 @@
+2213. Longest Substring of One Repeating Character
+
+Hard
+You are given a 0-indexed string s. You are also given a 0-indexed string queryCharacters of length k and a 0-indexed array of integer indices queryIndices of length k, both of which are used to describe k queries.
+
+The ith query updates the character in s at index queryIndices[i] to the character queryCharacters[i].
+
+Return an array lengths of length k where lengths[i] is the length of the longest substring of s consisting of only one repeating character after the ith query is performed.
+
+ 
+
+Example 1:
+
+Input: s = "babacc", queryCharacters = "bcb", queryIndices = [1,3,3]
+Output: [3,3,4]
+Explanation: 
+- 1st query updates s = "bbbacc". The longest substring consisting of one repeating character is "bbb" with length 3.
+- 2nd query updates s = "bbbccc". 
+  The longest substring consisting of one repeating character can be "bbb" or "ccc" with length 3.
+- 3rd query updates s = "bbbbcc". The longest substring consisting of one repeating character is "bbbb" with length 4.
+Thus, we return [3,3,4].
+Example 2:
+
+Input: s = "abyzz", queryCharacters = "aa", queryIndices = [2,1]
+Output: [2,3]
+Explanation:
+- 1st query updates s = "abazz". The longest substring consisting of one repeating character is "zz" with length 2.
+- 2nd query updates s = "aaazz". The longest substring consisting of one repeating character is "aaa" with length 3.
+Thus, we return [2,3].
+ 
+
+Constraints:
+
+1 <= s.length <= 105
+s consists of lowercase English letters.
+k == queryCharacters.length == queryIndices.length
+1 <= k <= 105
+queryCharacters consists of lowercase English letters.
+0 <= queryIndices[i] < s.length
+
+
+Solution:
+
+class Solution:
+    def longestRepeating(self, s: str, queryCharacters: str, queryIndices: List[int]) -> List[int]:
+        n = len(s)
+        size = 1
+        while size < n:
+            size <<= 1
+        length = [0] * (2 * size)
+        pref_char = [''] * (2 * size)
+        pref_len = [0] * (2 * size)
+        suff_char = [''] * (2 * size)
+        suff_len = [0] * (2 * size)
+        max_len = [0] * (2 * size)
+        for i, ch in enumerate(s):
+            idx = size + i
+            length[idx] = 1
+            pref_char[idx] = ch
+            pref_len[idx] = 1
+            suff_char[idx] = ch
+            suff_len[idx] = 1
+            max_len[idx] = 1
+        for i in range(size - 1, 0, -1):
+            left = 2 * i
+            right = 2 * i + 1
+            self._merge(i, left, right, length, pref_char, pref_len, suff_char, suff_len, max_len)
+        ans = []
+        for idx, ch in zip(queryIndices, queryCharacters):
+            pos = size + idx
+            length[pos] = 1
+            pref_char[pos] = ch
+            pref_len[pos] = 1
+            suff_char[pos] = ch
+            suff_len[pos] = 1
+            max_len[pos] = 1
+            pos //= 2
+            while pos:
+                left = 2 * pos
+                right = 2 * pos + 1
+                self._merge(pos, left, right, length, pref_char, pref_len, suff_char, suff_len, max_len)
+                pos //= 2
+            ans.append(max_len[1])
+        return ans
+    def _merge(self, node, left, right, length, pref_char, pref_len, suff_char, suff_len, max_len):
+        if length[left] == 0:
+            length[node] = length[right]
+            pref_char[node] = pref_char[right]
+            pref_len[node] = pref_len[right]
+            suff_char[node] = suff_char[right]
+            suff_len[node] = suff_len[right]
+            max_len[node] = max_len[right]
+            return
+        if length[right] == 0:
+            length[node] = length[left]
+            pref_char[node] = pref_char[left]
+            pref_len[node] = pref_len[left]
+            suff_char[node] = suff_char[left]
+            suff_len[node] = suff_len[left]
+            max_len[node] = max_len[left]
+            return
+        total_len = length[left] + length[right]
+        if pref_len[left] == length[left] and pref_char[left] == pref_char[right]:
+            pref_char[node] = pref_char[left]
+            pref_len[node] = pref_len[left] + pref_len[right]
+        else:
+            pref_char[node] = pref_char[left]
+            pref_len[node] = pref_len[left]
+        if suff_len[right] == length[right] and suff_char[right] == suff_char[left]:
+            suff_char[node] = suff_char[right]
+            suff_len[node] = suff_len[right] + suff_len[left]
+        else:
+            suff_char[node] = suff_char[right]
+            suff_len[node] = suff_len[right]
+        best = max(max_len[left], max_len[right])
+        if suff_char[left] == pref_char[right]:
+            best = max(best, suff_len[left] + pref_len[right])
+
+        length[node] = total_len
+        max_len[node] = best
+
+
+Testcase:
+
+"babacc"
+"bcb"
+[1,3,3]
+"abyzz"
+"aa"
+[2,1]
