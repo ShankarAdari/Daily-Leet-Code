@@ -1,0 +1,51 @@
+214. Shortest Palindrome
+
+
+Hard
+You are given a string s. You can convert s to a palindrome by adding characters in front of it.
+
+Return the shortest palindrome you can find by performing this transformation.
+
+ 
+
+Example 1:
+
+Input: s = "aacecaaa"
+Output: "aaacecaaa"
+Example 2:
+
+Input: s = "abcd"
+Output: "dcbabcd"
+ 
+
+Constraints:
+
+0 <= s.length <= 5 * 104
+s consists of lowercase English letters only.
+
+
+Solution:
+
+class Solution:
+    def shortestPalindrome(self, s: str) -> str:
+        if not s:
+            return ""
+        rev = s[::-1]
+        combined = s + "#" + rev
+        n = len(combined)
+        lps = [0] * n
+        for i in range(1, n):
+            j = lps[i-1]
+            while j > 0 and combined[i] != combined[j]:
+                j = lps[j-1]
+            if combined[i] == combined[j]:
+                j += 1
+            lps[i] = j
+        longest_pal_prefix = lps[-1]
+        return rev[:len(s)-longest_pal_prefix] + s
+
+
+Testcase:
+
+"aacecaaa"
+"abcd"
