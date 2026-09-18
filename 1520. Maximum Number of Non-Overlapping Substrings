@@ -1,0 +1,114 @@
+1520. Maximum Number of Non-Overlapping Substrings
+
+
+Hard
+Given a string s of lowercase letters, you need to find the maximum number of non-empty substrings of s that meet the following conditions:
+
+The substrings do not overlap, that is for any two substrings s[i..j] and s[x..y], either j < x or i > y is true.
+A substring that contains a certain character c must also contain all occurrences of c.
+Find the maximum number of substrings that meet the above conditions. If there are multiple solutions with the same number of substrings, return the one with minimum total length. It can be shown that there exists a unique solution of minimum total length.
+
+Notice that you can return the substrings in any order.
+
+ 
+
+Example 1:
+
+Input: s = "adefaddaccc"
+Output: ["e","f","ccc"]
+Explanation: The following are all the possible substrings that meet the conditions:
+[
+  "adefaddaccc"
+  "adefadda",
+  "ef",
+  "e",
+  "f",
+  "ccc",
+]
+If we choose the first string, we cannot choose anything else and we'd get only 1. If we choose "adefadda", we are left with "ccc" which is the only one that doesn't overlap, thus obtaining 2 substrings. Notice also, that it's not optimal to choose "ef" since it can be split into two. Therefore, the optimal way is to choose ["e","f","ccc"] which gives us 3 substrings. No other solution of the same number of substrings exist.
+Example 2:
+
+Input: s = "abbaccd"
+Output: ["d","bb","cc"]
+Explanation: Notice that while the set of substrings ["d","abba","cc"] also has length 3, it's considered incorrect since it has larger total length.
+ 
+
+Constraints:
+
+1 <= s.length <= 105
+s contains only lowercase English letters.
+
+
+Solution:
+
+from typing import List
+class Solution:
+    def maxNumOfSubstrings(self, s: str) -> List[str]:
+        n = len(s)
+        first = [-1] * 26
+        last = [-1] * 26
+        for i, ch in enumerate(s):
+            idx = ord(ch) - ord('a')
+            if first[idx] == -1:
+                first[idx] = i
+            last[idx] = i
+        candidates = []
+        for c in range(26):
+            if first[c] == -1:
+                continue
+            start = first[c]
+            end = last[c]
+            i = start
+            valid = True
+            while i <= end:
+                ch = s[i]
+                idx = ord(ch) - ord('a')
+                if first[idx] < start:
+                    valid = False
+                    break
+                if last[idx] > end:
+                    end = last[idx]
+                i += 1
+            if valid:
+                candidates.append((start, end))
+        candidates = list(set(candidates))
+        candidates.sort(key=lambda x: (x[1], x[0]))
+        m = len(candidates)
+        if m == 0:
+            return []
+        p = [-1] * m
+        for i in range(m):
+            start_i = candidates[i][0]
+            for j in range(i - 1, -1, -1):
+                if candidates[j][1] < start_i:
+                    p[i] = j
+                    break
+        dp = [(0, 0)] * (m + 1)
+        for i in range(1, m + 1):
+            start, end = candidates[i - 1]
+            len_i = end - start + 1
+            cnt_skip, len_skip = dp[i - 1]
+            prev = p[i - 1]
+            cnt_take, len_take = dp[prev + 1]
+            cnt_take += 1
+            len_take += len_i
+            if cnt_take > cnt_skip or (cnt_take == cnt_skip and len_take < len_skip):
+                dp[i] = (cnt_take, len_take)
+            else:
+                dp[i] = (cnt_skip, len_skip)
+        chosen = []
+        i = m
+        while i > 0:
+            if dp[i] == dp[i - 1]:
+                i -= 1
+            else:
+                start, end = candidates[i - 1]
+                chosen.append(s[start:end + 1])
+                i = p[i - 1] + 1
+        return chosen
+
+
+Testcase:
+
+"adefaddaccc"
+"abbaccd"
