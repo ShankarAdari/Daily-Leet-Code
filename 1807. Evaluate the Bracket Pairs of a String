@@ -1,0 +1,61 @@
+1807. Evaluate the Bracket Pairs of a String
+
+from typing import List
+
+class Solution:
+    def evaluate(self, s: str, knowledge: List[List[str]]) -> str:
+        # Build a dictionary for O(1) lookups
+        know = {key: value for key, value in knowledge}
+        
+        result = []
+        i = 0
+        n = len(s)
+        
+        while i < n:
+            if s[i] == '(':
+                # Find the matching closing parenthesis
+                j = i + 1
+                while s[j] != ')':
+                    j += 1
+                
+                key = s[i + 1:j]
+                result.append(know.get(key, '?'))
+                i = j + 1
+            else:
+                result.append(s[i])
+                i += 1
+        
+        return ''.join(result)
+
+
+Solution:
+
+from typing import List
+class Solution:
+    def evaluate(self, s: str, knowledge: List[List[str]]) -> str:
+        know = {key: value for key, value in knowledge}
+        result = []
+        i = 0
+        n = len(s)        
+        while i < n:
+            if s[i] == '(':
+                j = i + 1
+                while s[j] != ')':
+                    j += 1                
+                key = s[i + 1:j]
+                result.append(know.get(key, '?'))
+                i = j + 1
+            else:
+                result.append(s[i])
+                i += 1        
+        return ''.join(result)
+
+
+Testcase:
+
+"(name)is(age)yearsold"
+[["name","bob"],["age","two"]]
+"hi(name)"
+[["a","b"]]
+"(a)(a)(a)aaa"
+[["a","yes"]]
