@@ -1,0 +1,159 @@
+3505. Minimum Operations to Make Elements Within K Subarrays Equal
+
+
+Hard
+You are given an integer array nums and two integers, x and k. You can perform the following operation any number of times (including zero):
+
+Increase or decrease any element of nums by 1.
+Return the minimum number of operations needed to have at least k non-overlapping subarrays of size exactly x in nums, where all elements within each subarray are equal.
+
+ 
+
+Example 1:
+
+Input: nums = [5,-2,1,3,7,3,6,4,-1], x = 3, k = 2
+
+Output: 8
+
+Explanation:
+
+Use 3 operations to add 3 to nums[1] and use 2 operations to subtract 2 from nums[3]. The resulting array is [5, 1, 1, 1, 7, 3, 6, 4, -1].
+Use 1 operation to add 1 to nums[5] and use 2 operations to subtract 2 from nums[6]. The resulting array is [5, 1, 1, 1, 7, 4, 4, 4, -1].
+Now, all elements within each subarray [1, 1, 1] (from indices 1 to 3) and [4, 4, 4] (from indices 5 to 7) are equal. Since 8 total operations were used, 8 is the output.
+Example 2:
+
+Input: nums = [9,-2,-2,-2,1,5], x = 2, k = 2
+
+Output: 3
+
+Explanation:
+
+Use 3 operations to subtract 3 from nums[4]. The resulting array is [9, -2, -2, -2, -2, 5].
+Now, all elements within each subarray [-2, -2] (from indices 1 to 2) and [-2, -2] (from indices 3 to 4) are equal. Since 3 operations were used, 3 is the output.
+ 
+
+Constraints:
+
+2 <= nums.length <= 105
+-106 <= nums[i] <= 106
+2 <= x <= nums.length
+1 <= k <= 15
+2 <= k * x <= nums.length
+
+
+Solution:
+
+import heapq
+class MedianTracker:
+  def __init__(self):
+    self.left = [] 
+    self.right = []  
+    self.delayed_left = {}
+    self.delayed_right = {}
+    self.size_left = 0
+    self.size_right = 0
+    self.sum_left = 0
+    self.sum_right = 0
+  def _prune_left(self):
+    while self.left and -self.left[0] in self.delayed_left:
+      val = -self.left[0]
+      self.delayed_left[val] -= 1
+      if self.delayed_left[val] == 0:
+        del self.delayed_left[val]
+      heapq.heappop(self.left)
+  def _prune_right(self):
+    while self.right and self.right[0] in self.delayed_right:
+      val = self.right[0]
+      self.delayed_right[val] -= 1
+      if self.delayed_right[val] == 0:
+        del self.delayed_right[val]
+      heapq.heappop(self.right)
+  def balance(self):
+    self._prune_left()
+    self._prune_right()
+    while self.size_left > self.size_right + 1:
+      val = -heapq.heappop(self.left)
+      self.size_left -= 1
+      self.sum_left -= val
+      heapq.heappush(self.right, val)
+      self.size_right += 1
+      self.sum_right += val
+      self._prune_left()
+    while self.size_right > self.size_left:
+      val = heapq.heappop(self.right)
+      self.size_right -= 1
+      self.sum_right -= val
+      heapq.heappush(self.left, -val)
+      self.size_left += 1
+      self.sum_left += val
+      self._prune_right()
+  def add(self, val):
+    self._prune_left()
+    self._prune_right()
+    if not self.left or val <= -self.left[0]:
+      heapq.heappush(self.left, -val)
+      self.size_left += 1
+      self.sum_left += val
+    else:
+      heapq.heappush(self.right, val)
+      self.size_right += 1
+      self.sum_right += val
+    self.balance()
+  def remove(self, val):
+    self._prune_left()
+    self._prune_right()
+    if self.left and val <= -self.left[0]:
+      self.delayed_left[val] = self.delayed_left.get(val, 0) + 1
+      self.size_left -= 1
+      self.sum_left -= val
+    else:
+      self.delayed_right[val] = self.delayed_right.get(val, 0) + 1
+      self.size_right -= 1
+      self.sum_right -= val
+    self.balance()
+  def get_cost(self):
+    self._prune_left()
+    self._prune_right()
+    if not self.left:
+      return 0
+    median = -self.left[0]
+    return (
+        median * self.size_left
+        - self.sum_left
+        + self.sum_right
+        - median * self.size_right
+    )
+class Solution:
+  def minOperations(self, nums: list[int], x: int, k: int) -> int:
+    n = len(nums)
+    costs = [0] * (n - x + 1)
+    tracker = MedianTracker()
+    for i in range(n):
+      tracker.add(nums[i])
+      if i >= x:
+        tracker.remove(nums[i - x])
+      if i >= x - 1:
+        costs[i - x + 1] = tracker.get_cost()
+    INF = float("inf")
+    dp = [0] * (n + 1)
+    for j in range(1, k + 1):
+      next_dp = [INF] * (n + 1)
+      min_prev = INF
+      for i in range(j * x, n + 1):
+        min_prev = min(min_prev, dp[i - x])
+        if min_prev != INF:
+          next_dp[i] = min(next_dp[i - 1], min_prev + costs[i - x])
+        else:
+          next_dp[i] = next_dp[i - 1]
+      dp = next_dp
+    return dp[n] if dp[n] != INF else -1
+
+
+Testcase:
+
+[5,-2,1,3,7,3,6,4,-1]
+3
+2
+[9,-2,-2,-2,1,5]
+2
+2
